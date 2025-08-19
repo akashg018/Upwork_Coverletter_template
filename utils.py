@@ -63,7 +63,7 @@ def prepare_prompt(base_prompt: str, user_type: str, document_content: str, job_
 
 # --- Gemini Integration (Direct Invocation) ---
 
-def generate_with_gemini(prompt: str):
+def generate_with_gemini(prompt: str, job_questions: str = ""):
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise EnvironmentError("GEMINI_API_KEY not found. Please check your .env file.")
@@ -73,40 +73,59 @@ def generate_with_gemini(prompt: str):
         model = genai.GenerativeModel("gemini-2.0-flash-lite")
         response = model.generate_content(prompt)
         output = response.text.strip()
-        # Try to robustly split output into CV and QAs
         import re
-        # Look for a section explicitly titled 'Job Questions (QAs)'
-        qa_section_header = r"^\s*Job Questions \(QAs\)\s*[:\-]*\s*$"
-        m = re.search(qa_section_header, output, re.IGNORECASE | re.MULTILINE)
+        # Try to split at 'Job Questions (QAs)' header or similar
+        qa_section_headers = [
+            r"^\s*Job Questions \(QAs\)\s*[:\-]*\s*$",
+            r"^\s*Questions and Answers\s*[:\-]*\s*$",
+            r"^\s*QAs\s*[:\-]*\s*$",
+            r"^\s*Specific Questions\s*[:\-]*\s*$",
+            r"^\s*Regarding your specific questions\s*[:\-]*\s*$",
+            r"^\s*Answers to Job Questions\s*[:\-]*\s*$"
+        ]
+        m = None
+        for header_pat in qa_section_headers:
+            m = re.search(header_pat, output, re.IGNORECASE | re.MULTILINE)
+            if m:
+                break
         if m:
             split_idx = m.start()
             cover_letter = output[:split_idx].strip()
             qa_answers = output[split_idx:].strip()
         else:
-            # fallback: previous logic
-            qa_split_patterns = [
-                r"(?:Regarding your specific questions:|Questions and Answers:|QAs:?|Job Questions:?|Specific Questions:)",
-                r"(\n+|\r+)(1\)|1\.)"
-            ]
-            split_idx = None
-            for pat in qa_split_patterns:
-                m = re.search(pat, output, re.IGNORECASE)
-                if m:
-                    split_idx = m.start()
-                    break
-            if split_idx is not None:
-                cover_letter = output[:split_idx].strip()
-                qa_answers = output[split_idx:].strip()
+            # fallback: extract all numbered QAs from output (e.g., 1., 2), 3)
+            qa_matches = list(re.finditer(r"(^|\n)(\d+[\)|\.])", output))
+            if qa_matches:
+                first_qa_idx = qa_matches[0].start(2)
+                cover_letter = output[:first_qa_idx].strip()
+                qa_answers = output[first_qa_idx:].strip()
             else:
-                # fallback: try to find first numbered QA
-                m = re.search(r"(\n+|\r+)(1\)|1\.)", output)
-                if m:
-                    split_idx = m.start(2)
-                    cover_letter = output[:split_idx].strip()
-                    qa_answers = output[split_idx:].strip()
+                # fallback: look for lines starting with Q: or A:
+                qa_line_matches = list(re.finditer(r"(^|\n)(Q:|A:)\s*", output))
+                if qa_line_matches:
+                    first_qa_idx = qa_line_matches[0].start(2)
+                    cover_letter = output[:first_qa_idx].strip()
+                    qa_answers = output[first_qa_idx:].strip()
                 else:
-                    cover_letter = output
-                    qa_answers = "(No QA section detected in output)"
+                    # fallback: previous logic
+                    qa_split_patterns = [
+                        r"(?:Regarding your specific questions:|Questions and Answers:|QAs:?|Job Questions:?|Specific Questions:)"
+                    ]
+                    split_idx = None
+                    for pat in qa_split_patterns:
+                        m = re.search(pat, output, re.IGNORECASE)
+                        if m:
+                            split_idx = m.start()
+                            break
+                    if split_idx is not None:
+                        cover_letter = output[:split_idx].strip()
+                        qa_answers = output[split_idx:].strip()
+                    else:
+                        cover_letter = output
+                        qa_answers = "(No answers generated for job questions.)"
+        # Final fallback: if answers are missing but questions were provided, show the questions
+        if (not qa_answers or qa_answers.strip() == "(No answers generated for job questions.)") and job_questions.strip():
+            qa_answers = f"Questions provided:\n{job_questions.strip()}\n(No answers generated for job questions.)"
         return cover_letter, qa_answers
     except Exception as e:
         raise RuntimeError(f"Gemini generation failed: {e}")
