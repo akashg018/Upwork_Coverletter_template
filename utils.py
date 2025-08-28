@@ -32,7 +32,7 @@ def extract_text(file):
     elif filename.endswith(".txt"):
         return read_txt(file)
     else:
-        return "❌ Unsupported file format. Please upload PDF, DOCX, or TXT."
+        return "âŒ Unsupported file format. Please upload PDF, DOCX, or TXT."
 
 
 # --- Prompt Builder ---

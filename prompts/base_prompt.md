@@ -31,7 +31,7 @@ After generating the main cover letter above, create a section titled **"Job Que
 ### If Document Type is `Freelancer` (First-person singular)
 
 Hi,  
-Thank you for the opportunity to collaborate on your AI-Powered Workflow Tool with Agentic AI. 
+Thank you for the opportunity to collaborate on your AI-Powered Workflow Tool with Agentic AI.Â 
 
 {{Insert here a concise paragraph summarizing your hands-on experience building AI-powered automation tools and relevant projects, technologies, or results extracted from the proposal document. Keep it crisp and focused on reliability, scalability, and complexity as per the example below.}}
 
@@ -50,7 +50,7 @@ Thank you for the opportunity to collaborate on your Custom AI Voice Agent for C
 
 {{Insert here a concise paragraph summarizing your team's engineered scalable AI voice or workflow solutions, technologies used, and key relevant projects extracted from the proposal document. Mention specific technologies and outcomes as needed to align with the example below.}}
 
-{{Insert here a concise paragraph explaining how your previous implementations align with the client’s use case, highlighting integration points and solution scalability with Agentic AI or other relevant technologies. Mention attached proposal if relevant.}}
+{{Insert here a concise paragraph explaining how your previous implementations align with the clientâ€™s use case, highlighting integration points and solution scalability with Agentic AI or other relevant technologies. Mention attached proposal if relevant.}}
 
 Best regards,  
 Fusefy.ai
