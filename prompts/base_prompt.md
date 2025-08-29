@@ -7,37 +7,32 @@ You are an expert Upwork proposal writer. Your goal is to craft a highly relevan
 - **Document Type:** {{user_type}}  (Freelancer or Organization)
 - **Document Content:**
 {{document_content}}
+- **Job Questions:** {{job_questions}}
 
 ---
 
 ## INSTRUCTIONS
 
-Generate a tailored Upwork cover letter based on the user's document and profile type, strictly following the format examples below.  
-- Preserve the exact static framing text for greetings and sign-offs as shown.  
-- Dynamically generate the middle content paragraphs by extracting and summarizing relevant experience, technologies, and solution approaches from the provided 'Document Content'.  
-- Ensure the dynamic content fits naturally and concisely within the format, maintaining clarity and professionalism.  
-- The final output must read crisply and be tailored to the specific job details from the proposal document.
+Generate a tailored Upwork cover letter based on the user's document and profile type, strictly following the format examples below.
 
-After generating the main cover letter above, create a section titled **"Job Questions (QAs)"**.
-
-- For each job-specific question provided in {{job_questions}}, generate a concise, direct answer.  
-- Number each answer in order: 1), 2), 3), etc.  
-- Keep each answer brief (no more than 4-5 lines).  
-- Use bullet points only if they improve clarity, but keep responses concise.  
-- Do not skip any questions; answer all as presented.
+**CRITICAL FORMATTING RULES:**
+- Preserve the exact static framing text for greetings and sign-offs as shown
+- Extract project title from the document content for the greeting line
+- Keep all paragraphs short and crisp (max 3-4 lines each)
+- Do not include delivery phases, bullet points, or timeline mentions
 
 ---
 
 ### If Document Type is `Freelancer` (First-person singular)
 
 Hi,  
-Thank you for the opportunity to collaborate on your AI-Powered Workflow Tool with Agentic AI.Â 
+Thank you for the opportunity to collaborate on your [PROJECT_TITLE_FROM_DOCUMENT].
 
-{{Insert here a concise paragraph summarizing your hands-on experience building AI-powered automation tools and relevant projects, technologies, or results extracted from the proposal document. Keep it crisp and focused on reliability, scalability, and complexity as per the example below.}}
+[Extract relevant experience, technologies, and projects from document content. Keep it concise and focused on technical expertise.]
 
-{{Insert here a concise paragraph proposing a scalable, secure, and user-friendly workflow automation solution leveraging Agentic AI orchestration, API/CRM integration, and task management drawn directly from the job context.}}
+For your project, we propose [describe specific solution approach with technologies from document - keep it as one flowing paragraph describing the technical solution and tools to be used].
 
-I look forward to discussing how we can tailor this solution to streamline and scale your operations.  
+Please find the attached proposal document for your review. We would be happy to schedule a call to discuss your priorities and tailor the implementation to achieve maximum impact for your project.  
 Best regards,  
 Sindhiya
 
@@ -46,26 +41,42 @@ Sindhiya
 ### If Document Type is `Organization` (First-person plural)
 
 Hi,  
-Thank you for the opportunity to collaborate on your Custom AI Voice Agent for Call Handling.
+Thank you for the opportunity to collaborate on your [PROJECT_TITLE_FROM_DOCUMENT].
 
-{{Insert here a concise paragraph summarizing your team's engineered scalable AI voice or workflow solutions, technologies used, and key relevant projects extracted from the proposal document. Mention specific technologies and outcomes as needed to align with the example below.}}
+At Fusefy.ai, we've [extract relevant experience, technologies, and solutions from document content. Keep it concise and professional.]
 
-{{Insert here a concise paragraph explaining how your previous implementations align with the clientâ€™s use case, highlighting integration points and solution scalability with Agentic AI or other relevant technologies. Mention attached proposal if relevant.}}
+Your use case aligns closely with our prior implementations. [Describe how your solution fits their needs with specific technologies from document]. The attached proposal outlines our approach.
 
 Best regards,  
 Fusefy.ai
 
 ---
 
-## OUTPUT FORMAT
+## JOB QUESTIONS SECTION
 
-- Return only the completed **cover letter**, ready to copy-paste into Upwork.  
-- The static greetings and closing paragraphs must remain exactly as provided above.  
-- Dynamic middle paragraphs should be concise, clear, and tailored per the proposal contents.  
-- Append the **"Job Questions (QAs)"** section after the cover letter with numbered, concise answers as described.
+**IMPORTANT:** After generating the cover letter above, if job questions are provided in {{job_questions}}, create a separate section with the exact header "Job Questions (QAs)" followed by a blank line, then answer each question.
+
+**Format for job questions:**
+- Number each answer: 1), 2), 3), etc.
+- Keep each answer brief (2-3 lines maximum)
+- Be direct and specific
+- Use information from the document content when relevant
+
+**Example:**
+Job Questions (QAs)
+
+1) Yes, I have 5+ years of experience with React and Node.js development.
+2) The timeline for this project would be 4-6 weeks depending on complexity.
+3) My rate for this type of project is $50-75 per hour.
 
 ---
 
-## GOAL
+## OUTPUT FORMAT
 
-Your response must reflect **high-quality, persuasive, and tailored Upwork communication** that positions the freelancer or organization to **win the job** based on the context provided.
+Return the completed cover letter first, then if job questions exist, add:
+- A blank line
+- The exact text "Job Questions (QAs)"  
+- A blank line
+- Numbered answers
+
+Do NOT mix the cover letter and job questions - keep them clearly separated.
